@@ -141,6 +141,7 @@
   <ItemGroup>
     <ClCompile Include="FileStream.cpp" />
     <ClCompile Include="JObject.cpp" />
+    <ClCompile Include="JPair.cpp" />
     <ClCompile Include="JsonParser.cpp" />
     <ClCompile Include="JSubParser.cpp" />
     <ClCompile Include="LinkedList.cpp" />
@@ -157,6 +158,7 @@
     <ClInclude Include="LinkedList.h" />
     <ClInclude Include="MemoryStream.h" />
     <ClInclude Include="Stream.h" />
+    <ClInclude Include="whitespace.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

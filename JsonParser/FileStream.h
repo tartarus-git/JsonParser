@@ -14,6 +14,8 @@ public:
 
 	int read(char* buffer, int amount);
 
+	int skip(int amount);
+
 	~FileStream();
 };
 

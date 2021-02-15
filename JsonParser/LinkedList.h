@@ -4,10 +4,16 @@ template <typename T>
 class LinkedList
 {
 public:
-	T* element;
+	T element;
 	LinkedList* child;
+	int length = 1;
 
-	void add(T* element);
+	LinkedList<T>(T element);
 
+	void add(T element);
+
+	void reset();
+
+	T* toArray();
 };
 

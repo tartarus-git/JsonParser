@@ -9,5 +9,7 @@ public:
 	MemoryStream(const char* string);
 
 	int read(char* buffer, int length);
+
+	int skip(int amount);
 };
 

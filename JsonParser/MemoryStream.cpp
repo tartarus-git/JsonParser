@@ -13,3 +13,5 @@ int MemoryStream::read(char* buffer, int amount) {
 	pos += amount;
 	return amount;
 }
+
+int MemoryStream::skip(int amount) { pos += amount; }

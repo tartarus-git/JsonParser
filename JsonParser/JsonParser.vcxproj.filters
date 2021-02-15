@@ -39,6 +39,9 @@
     <ClCompile Include="JSubParser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="JPair.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="JsonParser.h">
@@ -63,6 +66,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="JSubParser.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="whitespace.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
