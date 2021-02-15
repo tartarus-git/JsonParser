@@ -139,11 +139,24 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="FileStream.cpp" />
+    <ClCompile Include="JObject.cpp" />
     <ClCompile Include="JsonParser.cpp" />
+    <ClCompile Include="JSubParser.cpp" />
+    <ClCompile Include="LinkedList.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MemoryStream.cpp" />
+    <ClCompile Include="Stream.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="FileStream.h" />
+    <ClInclude Include="JObject.h" />
+    <ClInclude Include="JPair.h" />
     <ClInclude Include="JsonParser.h" />
+    <ClInclude Include="JSubParser.h" />
+    <ClInclude Include="LinkedList.h" />
+    <ClInclude Include="MemoryStream.h" />
+    <ClInclude Include="Stream.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
