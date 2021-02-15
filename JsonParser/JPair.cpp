@@ -3,6 +3,8 @@
 #include "Stream.h"
 #include "LinkedList.h"
 #include "whitespace.h"
+#include "JObject.h"
+#include "JArray.h"
 
 EndingType JPair::parse(char character, Stream& stream) {
 	bool quotations = character == '\"';
@@ -23,26 +25,55 @@ EndingType JPair::parse(char character, Stream& stream) {
 	}
 	key = buffer.toArray();																// Store the linked list as an array permanently for efficient random access.
 	// TODO: Make sure to release the array in the finalizer of JPair and to release manually somewhere too maybe.
-	buffer.reset();																		// Prepare buffer for use by the value parser.
 
 	EndingType endingType;
 	while (stream.readChar(character)) {					// TODO: What if this fails in the middle of a value? Will the stop just propagate up the call stack or something? Make sure all the cases are accounted for.
 		if (filterWhitespace(character)) { continue; }
 
 		switch (character) {
-		case ',':
-			endingType = EndingType::comma;
-			goto quit;
-		case '}':
-			endingType = EndingType::object;
-			goto quit;
-		case ']':
-			endingType = EndingType::array;
-			goto quit;
+		case '{':
+			value = new JObject();
+			((JObject*)value)->parse(stream);
+			break;
+		case '[':
+			value = new JArray();
+			((JArray*)value)->parse(stream);
+			break;
+		case '\"':
+			buffer.reset();																// Reset the buffer before using it again.
+			while (stream.readChar(character)) {
+				if (character == '\"') { break; }
+				buffer.add(character);
+			}
+			buffer.add('\0');
+			value = buffer.toArray();			// TODO: Handle the memory and everything.
+			break;
+		case 't':
+			value = new bool(true);				// TODO: Refresh on what the hell those different default constructors do, because I think that I'm using one of those right here.
+			stream.skip(3);
+			break;
+		case 'f':
+			value = new bool(false);
+			stream.skip(4);
+			break;
+		case 'n':
+			value = nullptr;					// TODO: Should it be a pointer to a nullptr or just a nullptr? I guess you'll find out soon enough.
+			stream.skip(3);
+		// TODO: Handle numbers here.
 		}
-		buffer.add(character);
+
+		switch (character) {
+		case ',':
+			return EndingType::comma;
+		case '}':
+			return EndingType::object;
+		case ']':
+			return EndingType::array;
+		}
 	}
-quit:
-	value = buffer.toArray();			// TODO: Dispose this one as well in the finalizer.
-	return endingType;
+}
+
+JPair::~JPair() {
+	delete[] key;
+	delete[] value;
 }

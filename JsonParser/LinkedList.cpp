@@ -1,15 +1,10 @@
 #include "LinkedList.h"
 
 template <typename T>
-LinkedList<T>::LinkedList<T>(T element) {
-	this->element = element;
-}
-
-template <typename T>
 void LinkedList<T>::add(T element) {
-	if (length == 1) {
-		child = new LinkedList<T>();				// TODO: Worry about the release of this.
-		child->element = element;
+	if (length == 0) {
+		this->element = element;
+		child = new LinkedList<T>();				// TODO: Worry about releasing this allocation.
 		length++;
 		return;
 	}
@@ -18,7 +13,7 @@ void LinkedList<T>::add(T element) {
 
 template <typename T>
 void LinkedList<T>::reset() {
-	length = 1;
+	length = 0;
 }
 
 template <typename T>
@@ -33,4 +28,9 @@ T* LinkedList<T>::toArray() {
 	}
 
 	return result;
+}
+
+template <typename T>
+LinkedList<T>::~LinkedList() {
+	delete child;
 }

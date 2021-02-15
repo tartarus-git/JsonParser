@@ -140,6 +140,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="FileStream.cpp" />
+    <ClCompile Include="JArray.cpp" />
     <ClCompile Include="JObject.cpp" />
     <ClCompile Include="JPair.cpp" />
     <ClCompile Include="JsonParser.cpp" />
@@ -151,6 +152,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FileStream.h" />
+    <ClInclude Include="JArray.h" />
     <ClInclude Include="JObject.h" />
     <ClInclude Include="JPair.h" />
     <ClInclude Include="JsonParser.h" />

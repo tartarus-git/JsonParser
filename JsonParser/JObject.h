@@ -1,15 +1,13 @@
 #pragma once
 
 #include "JSubParser.h"
-#include "LinkedList.h"
 #include "JPair.h"
 #include "Stream.h"
 
-class JObject : public JSubParser
+class JObject// : public JSubParser
 {
-	LinkedList<JPair> content;
-
 public:
+	JPair* content;
+
 	void parse(Stream& stream);
 };
-

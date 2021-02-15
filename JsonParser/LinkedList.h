@@ -5,15 +5,15 @@ class LinkedList
 {
 public:
 	T element;
-	LinkedList* child;
-	int length = 1;
-
-	LinkedList<T>(T element);
+	LinkedList<T>* child;
+	int length = 0;
 
 	void add(T element);
 
 	void reset();
 
 	T* toArray();
+
+	~LinkedList();
 };
 

@@ -17,5 +17,7 @@ public:
 	void* value;
 
 	EndingType parse(char character, Stream& stream);
+
+	~JPair();
 };
 

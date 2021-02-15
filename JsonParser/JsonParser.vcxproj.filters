@@ -42,6 +42,9 @@
     <ClCompile Include="JPair.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="JArray.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="JsonParser.h">
@@ -69,6 +72,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="whitespace.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="JArray.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

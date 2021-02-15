@@ -1,9 +1,11 @@
 #include "JObject.h"
 
 #include "Stream.h"
+#include "LinkedList.h"
 #include "whitespace.h"
 
 void JObject::parse(Stream& stream) {
+	LinkedList<JPair> buffer;
 	char character;
 	if (stream.readChar(character)) {
 		while (true) {																									// Loop through the object and parse all the contents.
@@ -12,9 +14,11 @@ void JObject::parse(Stream& stream) {
 
 			JPair newPair;
 			if (newPair.parse(character, stream) == EndingType::object) { break; }										// If char isn't whitespace or angel bracket, parse new key-value pair. End object if the pair ends with angel bracket.
-			content.add(newPair);																						// Add the newly parsed key-value pair to the content of this object.
+			buffer.add(newPair);																						// Add the newly parsed key-value pair to the content of this object.
 
 			if (stream.readChar(character)) { continue; }
 		}
+		content = buffer.toArray();
+		return;
 	}
 }
