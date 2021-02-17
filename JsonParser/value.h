@@ -7,16 +7,10 @@
 #include "JArray.h"
 #include "LinkedList.h"
 #include "TypedVoidPtr.h"
+#include "EndingType.h"
 
 #define ASCII_NUMBERS_BEGIN 0x30
 #define ASCII_NUMBERS_END ASCII_NUMBERS_BEGIN + 9
-
-// Return type indicating whether the value was ended by an object ending, array ending or comma.
-enum class EndingType {
-	comma,
-	object,
-	array
-};
 
 EndingType parseValue(Stream& stream, TypedVoidPtr& value) {
 	char character;

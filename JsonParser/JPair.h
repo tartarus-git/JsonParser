@@ -1,8 +1,9 @@
 #pragma once
 
-#include "JSubParser.h"
 #include "Stream.h"
-#include "value.h"
+//#include "value.h"
+#include "EndingType.h"
+
 #include "TypedVoidPtr.h"
 
 class JPair// : public JSubParser				// TODO: Is this thing even necessary? Where are we going to generalize and going to need this?

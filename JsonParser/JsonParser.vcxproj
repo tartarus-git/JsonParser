@@ -144,19 +144,18 @@
     <ClCompile Include="JObject.cpp" />
     <ClCompile Include="JPair.cpp" />
     <ClCompile Include="JsonParser.cpp" />
-    <ClCompile Include="JSubParser.cpp" />
     <ClCompile Include="LinkedList.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MemoryStream.cpp" />
     <ClCompile Include="Stream.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="EndingType.h" />
     <ClInclude Include="FileStream.h" />
     <ClInclude Include="JArray.h" />
     <ClInclude Include="JObject.h" />
     <ClInclude Include="JPair.h" />
     <ClInclude Include="JsonParser.h" />
-    <ClInclude Include="JSubParser.h" />
     <ClInclude Include="LinkedList.h" />
     <ClInclude Include="MemoryStream.h" />
     <ClInclude Include="Stream.h" />
