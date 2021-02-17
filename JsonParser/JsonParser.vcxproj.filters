@@ -77,5 +77,11 @@
     <ClInclude Include="JArray.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="value.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TypedVoidPtr.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

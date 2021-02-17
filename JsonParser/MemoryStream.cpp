@@ -14,4 +14,9 @@ int MemoryStream::read(char* buffer, int amount) {
 	return amount;
 }
 
-int MemoryStream::skip(int amount) { pos += amount; }
+int MemoryStream::skip(int amount) {
+	int newPos = pos + amount;
+	if (newPos > length) { return length - pos; }
+	if (newPos < 0) { return -pos; }
+	return amount;
+}

@@ -4,11 +4,18 @@ template <typename T>
 void LinkedList<T>::add(T element) {
 	if (length == 0) {
 		this->element = element;
-		child = new LinkedList<T>();				// TODO: Worry about releasing this allocation.
+		child = new LinkedList<T>();				// TODO: Worry about releasing this allocation. Especially when resetting a list. Does everything get release properly?
 		length++;
 		return;
 	}
 	child->add(element);
+}
+
+template <typename T>
+LinkedList<T>::LinkedList(T element) {
+	this->element = element;
+	child = new LinkedList<T>();
+	length++;
 }
 
 template <typename T>

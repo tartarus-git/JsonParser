@@ -8,7 +8,11 @@ public:
 	LinkedList<T>* child;
 	int length = 0;
 
+	LinkedList() = default;
+
 	void add(T element);
+
+	LinkedList(T element);
 
 	void reset();
 

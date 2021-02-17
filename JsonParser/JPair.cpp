@@ -3,12 +3,12 @@
 #include "Stream.h"
 #include "LinkedList.h"
 #include "whitespace.h"
-#include "JObject.h"
-#include "JArray.h"
+#include "value.h"
 
 EndingType JPair::parse(char character, Stream& stream) {
-	bool quotations = character == '\"';
+	bool quotations = character == '\"';												// Make sure to account for keys with quotations around them.
 
+	// Parse key.
 	LinkedList<char> buffer(character);
 	while (stream.readChar(character)) {
 		if (filterWhitespace(character)) { continue; }									// Filter out the whitespace.
@@ -26,54 +26,11 @@ EndingType JPair::parse(char character, Stream& stream) {
 	key = buffer.toArray();																// Store the linked list as an array permanently for efficient random access.
 	// TODO: Make sure to release the array in the finalizer of JPair and to release manually somewhere too maybe.
 
-	EndingType endingType;
-	while (stream.readChar(character)) {					// TODO: What if this fails in the middle of a value? Will the stop just propagate up the call stack or something? Make sure all the cases are accounted for.
-		if (filterWhitespace(character)) { continue; }
-
-		switch (character) {
-		case '{':
-			value = new JObject();
-			((JObject*)value)->parse(stream);
-			break;
-		case '[':
-			value = new JArray();
-			((JArray*)value)->parse(stream);
-			break;
-		case '\"':
-			buffer.reset();																// Reset the buffer before using it again.
-			while (stream.readChar(character)) {
-				if (character == '\"') { break; }
-				buffer.add(character);
-			}
-			buffer.add('\0');
-			value = buffer.toArray();			// TODO: Handle the memory and everything.
-			break;
-		case 't':
-			value = new bool(true);				// TODO: Refresh on what the hell those different default constructors do, because I think that I'm using one of those right here.
-			stream.skip(3);
-			break;
-		case 'f':
-			value = new bool(false);
-			stream.skip(4);
-			break;
-		case 'n':
-			value = nullptr;					// TODO: Should it be a pointer to a nullptr or just a nullptr? I guess you'll find out soon enough.
-			stream.skip(3);
-		// TODO: Handle numbers here.
-		}
-
-		switch (character) {
-		case ',':
-			return EndingType::comma;
-		case '}':
-			return EndingType::object;
-		case ']':
-			return EndingType::array;
-		}
-	}
+	// Parse value.
+	return parseValue(stream, value);
 }
 
 JPair::~JPair() {
 	delete[] key;
-	delete[] value;
+	delete value.pointer;					// TODO: This is a major no-no and causes all sorts of memory leaks. Find a creative solution for the releasing of all this stuff.
 }
