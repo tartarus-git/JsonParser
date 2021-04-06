@@ -21,3 +21,4 @@ public:
 	~LinkedList();
 };
 
+#include "LinkedList.hpp"

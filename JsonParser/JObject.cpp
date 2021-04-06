@@ -16,9 +16,10 @@ void JObject::parse(Stream& stream) {
 			if (newPair.parse(character, stream) == EndingType::object) { break; }										// If char isn't whitespace or angel bracket, parse new key-value pair. End object if the pair ends with angel bracket.
 			buffer.add(newPair);																						// Add the newly parsed key-value pair to the content of this object.
 
-			if (stream.readChar(character)) { continue; }
+			if (stream.readChar(character)) { continue; }				// TODO: This is stupid. You need to decide what you want to do when the input is wrong. Like if there isn't anything after this. Quit?
 		}
 		content = buffer.toArray();
+		length = buffer.length;
 		return;
 	}
 }

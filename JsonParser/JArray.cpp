@@ -4,6 +4,8 @@
 #include "TypedVoidPtr.h"
 #include "value.h"
 
+#include <iostream>
+
 void JArray::parse(Stream& stream) {
 	LinkedList<TypedVoidPtr> buffer;
 	char character;

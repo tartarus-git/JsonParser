@@ -23,6 +23,7 @@ EndingType JPair::parse(char character, Stream& stream) {
 		if (character == ':') { break; }												// Colon marks end of key, so break.
 		buffer.add(character);															// Read the next character and add it to the key.
 	}
+	buffer.add('\0');
 	key = buffer.toArray();																// Store the linked list as an array permanently for efficient random access.
 	// TODO: Make sure to release the array in the finalizer of JPair and to release manually somewhere too maybe.
 
@@ -31,6 +32,6 @@ EndingType JPair::parse(char character, Stream& stream) {
 }
 
 JPair::~JPair() {
-	delete[] key;
-	delete value.pointer;					// TODO: This is a major no-no and causes all sorts of memory leaks. Find a creative solution for the releasing of all this stuff.
+	//delete[] key;
+	//delete value.pointer;					// TODO: This is a major no-no and causes all sorts of memory leaks. Find a creative solution for the releasing of all this stuff.
 }

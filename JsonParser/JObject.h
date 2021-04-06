@@ -7,6 +7,7 @@ class JObject// : public JSubParser
 {
 public:
 	JPair* content;
+	int length;
 
 	void parse(Stream& stream);
 };

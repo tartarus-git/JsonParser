@@ -12,7 +12,7 @@
 #define ASCII_NUMBERS_BEGIN 0x30
 #define ASCII_NUMBERS_END ASCII_NUMBERS_BEGIN + 9
 
-EndingType parseValue(Stream& stream, TypedVoidPtr& value) {
+inline EndingType parseValue(Stream& stream, TypedVoidPtr& value) {
 	char character;
 	while (stream.readChar(character)) {					// TODO: What if this fails in the middle of a value? Will the stop just propagate up the call stack or something? Make sure all the cases are accounted for.
 		if (filterWhitespace(character)) { continue; }

@@ -1,4 +1,4 @@
-#include "LinkedList.h"
+#pragma once
 
 template <typename T>
 void LinkedList<T>::add(T element) {
@@ -28,10 +28,10 @@ T* LinkedList<T>::toArray() {
 	T* result = new T[length];
 	result[0] = element;												// Set the first element to our element.
 
-	LinkedList<T> current = child;
+	LinkedList<T>* current = child;
 	for (int i = 1; i < length; i++) {									// Loop through the whole family tree and put the elements into their respective slots.
-		result[i] = current.element;
-		current = current.child;
+		result[i] = current->element;
+		current = current->child;
 	}
 
 	return result;

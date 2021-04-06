@@ -7,4 +7,8 @@ int main(int argc, char* argv[]) {
 	FileStream f(argv[0]);
 	// Connect up the free end of the stream to the JSON parser.
 	JObject result = JsonParser::parse(f);
+
+	for (int i = 0; i < result.length; i++) {
+		printf("%s\n", result.content[i].key);
+	}
 }
