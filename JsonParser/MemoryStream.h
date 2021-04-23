@@ -1,5 +1,8 @@
 #pragma once
-class MemoryStream
+
+#include "Stream.h"
+
+class MemoryStream : public Stream
 {
 	int pos = 0;
 	int length;

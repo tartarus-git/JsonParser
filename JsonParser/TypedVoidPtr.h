@@ -7,7 +7,7 @@ enum class ValueType {
 	string,
 	boolean,
 	null,
-	integer						// TODO: Is this the best description? Should I use number or integer?
+	integer
 };
 
 struct TypedVoidPtr {

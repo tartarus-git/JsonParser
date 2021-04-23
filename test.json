@@ -1,7 +1,7 @@
 {
 	test: "test",
 	dog: "dog",
-	cat: "bruh"
+	cat: "bruh",
 
 	newObject: {
 		otherNewObject: {
