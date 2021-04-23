@@ -6,29 +6,39 @@
 #include "value.h"
 
 EndingType JPair::parse(char character, Stream& stream) {
-	bool quotations = character == '\"';												// Make sure to account for keys with quotations around them.
+	bool quotations = character == '\"';													// Make sure to account for keys with quotations around them.
 
 	// Parse key.
 	LinkedList<char> buffer(character);
-	while (stream.readChar(character)) {
-		if (filterWhitespace(character)) { continue; }									// Filter out the whitespace.
+	while (true) {
+		if (stream.readChar(&character)) {													// If the stream has not ended, parse.
+			if (filterWhitespace(character)) { continue; }									// Filter out the whitespace.
 
-		if (quotations && character == '\"') {											// If quotation mode is on, quotation marks end of key, so skip past upcoming colon and break.
-			while (stream.readChar(character)) {				// TODO: Make sure that a break here doesn't break the whole thing.
-				if (filterWhitespace(character)) { continue; }
-				if (character == ':') { break; }
+			if (quotations && character == '\"') {											// If quotation mode is on, quotation marks end of key, so skip past upcoming colon and start parsing value.
+				while (true) {
+					if (stream.readChar(&character)) {										// If stream hasn't ended, keep preparing for value parsing.
+						if (filterWhitespace(character)) { continue; }						// Filter whitespace.
+						if (character == ':') { goto keyEnd; }								// When we hit the colon, we can hand over control to the value parser.
+						continue;
+					}
+					buffer.reset();															// If stream ends before we're ready, release buffer and return error.
+					return EndingType::error;
+				}
 			}
-			break;
+			if (character == ':') { break; }												// Colon marks end of key, so break.
+			buffer.add(character);															// Read the next character and add it to the key.
+			continue;
 		}
-		if (character == ':') { break; }												// Colon marks end of key, so break.
-		buffer.add(character);															// Read the next character and add it to the key.
+		buffer.reset();																		// If the stream ends before proper closure, release buffer and return EndingType::error.
+		return EndingType::error;
 	}
+
+keyEnd:																						// Finalize key and hand over control to the value parser.
 	buffer.add('\0');
-	key = buffer.toArray();																// Store the linked list as an array permanently for efficient random access.
+	key = buffer.toArray();
 	// TODO: Make sure to release the array in the finalizer of JPair and to release manually somewhere too maybe.
 
-	// Parse value.
-	return parseValue(stream, value);
+	return parseValue(stream, value);														// Return ending type of parsed value.
 }
 
 JPair::~JPair() {

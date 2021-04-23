@@ -1,14 +1,18 @@
-#include "FileStream.h"						// TODO: Obviously make these includes more structured for the final product.
-#include "JsonParser.h"						// TODO: Consider making the Json into a JSON.
+#include <iostream>
+
+#include "FileStream.h"
 #include "JObject.h"
+#include "JsonParser.h"
 
 int main(int argc, char* argv[]) {
-	// Construct stream which feeds from the file input.
-	FileStream f(argv[0]);
-	// Connect up the free end of the stream to the JSON parser.
-	JObject result = JsonParser::parse(f);
+	FileStream f(argv[1]);																		// Construct stream which feeds from the file input.
+	JObject result = JsonParser::parse(f);														// Connect up the free end of the stream to the JSON parser.
 
+	// Very simple display code for debugging the parsed data.
 	for (int i = 0; i < result.length; i++) {
-		printf("%s\n", result.content[i].key);
+		std::cout << result.content[i].key << " : " << (char*)result.content[i].value.pointer << std::endl;
 	}
+
+	// Wait for keyboard input so the window doesn't close automatically.
+	std::cin.get();
 }

@@ -7,12 +7,16 @@ JObject JsonParser::parse(Stream& stream) {
 	JObject result;
 	char character;
 	while (true) {																							// Find the first object using loop.
-		if (stream.readChar(character)) {																	// If there is another character to read, keep reading from the stream and parsing.
+		if (stream.readChar(&character)) {																	// Keep looking as long as the stream still has available data.
 			if (character == '{') { break; }
 			continue;
 		}
-		break;											// TODO: If this break happens before we have a solid object, what do we return? null? how?
+		result.length = 0;																					// If file ends before the first JObject could be opened, then return an empty JObject.
+		return result;
 	}
-	result.parse(stream);																					// Tell the result object to start parsing its contents.
+	if (result.parse(stream)) {																				// Tell the opened JObject to start parsing it's contents.
+		return result;																						// Return the entirety of the parsed JSON contents as long as no errors were encountered.
+	}
+	result.length = 0;																						// If errors were encountered, return an empty JObject.
 	return result;
 }

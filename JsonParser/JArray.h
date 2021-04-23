@@ -8,8 +8,9 @@ class JArray
 {
 public:
 	TypedVoidPtr* content;
+	int length;
 
-	void parse(Stream& stream);
+	bool parse(Stream& stream);
 
 	~JArray();
 };

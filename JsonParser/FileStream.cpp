@@ -1,5 +1,8 @@
 #include "FileStream.h"
 
+#include <iostream>
+#include <fstream>
+
 std::ifstream f;
 
 FileStream::FileStream(const char* path) {

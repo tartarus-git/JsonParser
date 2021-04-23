@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstdint>
+
 #include "Stream.h"
 #include "TypedVoidPtr.h"
 #include "whitespace.h"
@@ -12,63 +14,87 @@
 #define ASCII_NUMBERS_BEGIN 0x30
 #define ASCII_NUMBERS_END ASCII_NUMBERS_BEGIN + 9
 
+inline EndingType parseEnding(Stream& stream) {
+	char character;
+	while (stream.readChar(&character)) {														// Keep parsing ending as long as the stream hasn't ended.
+		if (filterWhitespace(character)) { continue; }											// Filter whitespace.
+
+		switch (character) {																	// Check for all the different ending types. Return the right one.
+			case ',':
+				return EndingType::comma;
+			case '}':
+				return EndingType::object;
+			case ']':
+				return EndingType::array;
+		}
+	}
+	return EndingType::error;																	// Return error if stream ends before we're finished.
+}
+
 inline EndingType parseValue(Stream& stream, TypedVoidPtr& value) {
 	char character;
-	while (stream.readChar(character)) {					// TODO: What if this fails in the middle of a value? Will the stop just propagate up the call stack or something? Make sure all the cases are accounted for.
-		if (filterWhitespace(character)) { continue; }
+	while (stream.readChar(&character)) {														// If stream hasn't ended keep parsing.
+		if (filterWhitespace(character)) { continue; }											// Filter out whitespace.
 
-		LinkedList<char> buffer;												// We have to allocate it here so that the switch statement doesn't complain because of inconstant stack.
+		LinkedList<char> buffer;																// You have to do this here because or else the switch statement will start complaining because of stack issues.
+		bool numberIsNegative = false;															// Flag for keeping track of the sign of an ongoing number.
 		switch (character) {
 		case '{':
-			value.type = ValueType::object;
+			value.type = ValueType::object;														// If angel brackets are opened, start parsing JObject.
 			value.pointer = new JObject();
-			((JObject*)value.pointer)->parse(stream);
-			break;
+			if (((JObject*)value.pointer)->parse(stream)) { return parseEnding(stream); }		// If JObject sucessfully parses, parse the value ending and return the ending type.
+			return EndingType::error;															// Return error if that isn't the case.
 		case '[':
 			value.type = ValueType::array;
 			value.pointer = new JArray();
-			((JArray*)value.pointer)->parse(stream);
-			break;
+			if (((JArray*)value.pointer)->parse(stream)) { return parseEnding(stream); }		// If JArray sucessfully parses, parse the value ending and return the ending type.
+			return EndingType::error;															// Return error if JArray doesn't sucessfully parse.
 		case '\"':
 			value.type = ValueType::string;
-			while (stream.readChar(character)) {
-				if (character == '\"') { break; }
+			while (stream.readChar(&character)) {
+				if (character == '\"') {
+					buffer.add('\0');
+					value.pointer = buffer.toArray();
+					buffer.reset();																// Release buffer.
+					return parseEnding(stream);													// If everything works out, parse ending and return ending type.
+				}
 				buffer.add(character);
 			}
-			buffer.add('\0');						// TODO: Is there any way to have this happen at array level at the end so it's more efficient without compromising the variability of the LinkedList class?
+			buffer.reset();																		// Release buffer.
+			return EndingType::error;															// If stream runs out before the string could be parsed, return error.
+
+
+			/*buffer.add('\0');						// TODO: Is there any way to have this happen at array level at the end so it's more efficient without compromising the variability of the LinkedList class?
 			value.pointer = buffer.toArray();			// TODO: Handle the memory and everything.
-			break;
+			break;*/
 		case 't':
 			value.type = ValueType::boolean;
 			value.pointer = new bool(true);				// TODO: Find out which default constructor this uses and why. Should I use std::move here. Technically I should right? Defo check that out. I should use it everywhere no?
 			stream.skip(3);
-			break;
+			return parseEnding(stream);															// If everything works out, parse ending and return ending type.
 		case 'f':
 			value.type = ValueType::boolean;
 			value.pointer = new bool(false);
 			stream.skip(4);
-			break;
+			return parseEnding(stream);															// If everything works out, parse ending and return ending type.
 		case 'n':
 			value.type = ValueType::null;
 			value.pointer = nullptr;					// TODO: Should it be a pointer to a nullptr or just a nullptr? I guess you'll find out soon enough.
 			stream.skip(3);
-			break;
-		// Check for end of value:
-		case ',':
-			return EndingType::comma;
-		case '}':
-			return EndingType::object;
-		case ']':
-			return EndingType::array;
+			return parseEnding(stream);															// If everything works out. parse ending and return ending type.
 		// In case of number:
+		case '-':																				// If a minus is read, go forward expecting a negative number.
+			value.type = ValueType::integer;
+			value.pointer = new int32_t(character - ASCII_NUMBERS_BEGIN);						// Get the first digit by subtracting the index of the number starting point in the ASCII table.
+			numberIsNegative = true;															// Set this flag so that the number parser knows that the number is negative.
+			goto readNumber;																	// Jump straight to the number parsing code so that you don't waste any cycles or time.
 		default:
-			if (character >= ASCII_NUMBERS_BEGIN && character <= ASCII_NUMBERS_END) {
+			if (character >= ASCII_NUMBERS_BEGIN && character <= ASCII_NUMBERS_END) {			// Check if the character is in the number range in the ASCII table.
 				value.type = ValueType::integer;
-				value.pointer = new int(character - ASCII_NUMBERS_BEGIN);
-				// This is commented out but still do the TODO's. TODO.
-				//*(int*)value *= 10;						// TODO: Does this type of cast cost any processing? It's technically not even doing anything, so it shouldn't cost anything right?
-				//return parseNumber(stream);							// TODO: So I think that decimal numbers are mostly transmitted through string in JSON, but what about normal numbers, am I ok with int. I should specify to int32_t right? Check with the spec.
-				while (stream.readChar(character)) {							// TODO: As always, make sure the edge case of the whole file ending here actually gets handled well by the rest of the program.
+				value.pointer = new int32_t(character - ASCII_NUMBERS_BEGIN);					// Get first digit of number by subtracting.
+
+			readNumber:
+				while (stream.readChar(&character)) {											// Read actual number and return ending type if ending when ending is encountered.
 					switch (character) {
 					case ',':
 						return EndingType::comma;
@@ -78,10 +104,12 @@ inline EndingType parseValue(Stream& stream, TypedVoidPtr& value) {
 						return EndingType::array;
 					// In case of actual number, which is why we're here:
 					default:
-						*(int*)value.pointer *= 10;
-						*(int*)value.pointer += character - ASCII_NUMBERS_BEGIN;
+						*(int32_t*)value.pointer *= 10;
+						if (numberIsNegative) { *(int32_t*)value.pointer -= character - ASCII_NUMBERS_BEGIN; break; }
+						*(int32_t*)value.pointer += character - ASCII_NUMBERS_BEGIN;
 					}
 				}
+				return EndingType::error;														// If stream ends before we're good, then return error.
 			}
 		}
 	}

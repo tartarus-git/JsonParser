@@ -2,10 +2,10 @@
 
 template <typename T>
 void LinkedList<T>::add(T element) {
-	if (length == 0) {
+	length++;
+	if (length == 1) {
 		this->element = element;
 		child = new LinkedList<T>();				// TODO: Worry about releasing this allocation. Especially when resetting a list. Does everything get release properly?
-		length++;
 		return;
 	}
 	child->add(element);

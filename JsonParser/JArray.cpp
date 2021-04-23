@@ -4,18 +4,25 @@
 #include "TypedVoidPtr.h"
 #include "value.h"
 
-#include <iostream>
-
-void JArray::parse(Stream& stream) {
+bool JArray::parse(Stream& stream) {
 	LinkedList<TypedVoidPtr> buffer;
 	char character;
-	while (stream.readChar(character)) {
+	while (true) {																			// No reading of anything here, just continual parsing of values.
 		TypedVoidPtr value;
-		//parseValue(stream, value);							// Is this good practice? Cuz you can't easily see that it's going to be modified. Should I put an & in for cosmetic reasons? That would ruin the point of having no pointer right? TODO.
-		// TODO: Just copied it cuz lazy, TODO still applies.
-		if (parseValue(stream, value) == EndingType::array) { break; }
+		EndingType ending = parseValue(stream, value);										// Parse a value in the array.
+
+		switch (ending) {
+		case EndingType::error:																// If the ending type of the parsed value is that of an error, release buffer and return failure.
+			buffer.reset();
+			return false;
+		case EndingType::array:																// If ending is that of an array, finalize and close this array.
+			content = buffer.toArray();
+			length = buffer.length;
+			return true;																	// Return sucess.
+		}
+		buffer.add(value);																	// If everything is fine but we haven't reached the end of the array yet, just add the new value to the buffer.
 	}
-	content = buffer.toArray();
+	// We don't need to put a return failure here because we don't actually do any parsing in this function, the values themselves take care of everything for us.
 }
 
 JArray::~JArray() {
