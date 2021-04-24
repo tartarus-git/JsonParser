@@ -1,14 +1,16 @@
 #pragma once
 
+#include <utility>
+
 template <typename T>
-void LinkedList<T>::add(T element) {
+void LinkedList<T>::add(T&& element) {
 	length++;
 	if (length == 1) {
-		this->element = element;
+		this->element = std::move(element);
 		child = new LinkedList<T>();				// TODO: Worry about releasing this allocation. Especially when resetting a list. Does everything get release properly?
 		return;
 	}
-	child->add(element);
+	child->add(std::move(element));
 }
 
 template <typename T>
@@ -26,11 +28,11 @@ void LinkedList<T>::reset() {
 template <typename T>
 T* LinkedList<T>::toArray() {
 	T* result = new T[length];
-	result[0] = element;												// Set the first element to our element.
+	result[0] = std::move(element);												// Set the first element to our element.
 
 	LinkedList<T>* current = child;
 	for (int i = 1; i < length; i++) {									// Loop through the whole family tree and put the elements into their respective slots.
-		result[i] = current->element;
+		result[i] = std::move(current->element);
 		current = current->child;
 	}
 

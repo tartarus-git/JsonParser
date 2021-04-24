@@ -8,7 +8,6 @@
 
 bool JArray::parse(Stream& stream) {
 	LinkedList<TypedVoidPtr> buffer;
-	char character;
 	while (true) {																			// No reading of anything here, just continual parsing of values.
 		TypedVoidPtr value;
 		EndingType ending = parseValue(stream, value);										// Parse a value in the array.

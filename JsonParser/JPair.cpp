@@ -7,6 +7,19 @@
 #include "whitespace.h"
 #include "value.h"
 
+#include <iostream>
+
+JPair::JPair(JPair&& other) noexcept : key(other.key), value(other.value) {
+	other.key = nullptr;
+}
+
+JPair& JPair::operator=(JPair&& other) noexcept {
+	key = other.key;
+	value = other.value;
+	other.key = nullptr;
+	return *this;
+}
+
 EndingType JPair::parse(char character, Stream& stream) {
 	bool quotations = character == '\"';													// Make sure to account for keys with quotations around them.
 
@@ -28,7 +41,7 @@ EndingType JPair::parse(char character, Stream& stream) {
 				}
 			}
 			if (character == ':') { break; }												// Colon marks end of key, so break.
-			buffer.add(character);															// Read the next character and add it to the key.
+			buffer.add(std::move(character));															// Read the next character and add it to the key.
 			continue;
 		}
 		buffer.reset();																		// If the stream ends before proper closure, release buffer and return EndingType::error.

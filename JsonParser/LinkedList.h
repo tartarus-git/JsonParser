@@ -10,7 +10,7 @@ public:
 
 	LinkedList() = default;
 
-	void add(T element);
+	void add(T&& element);
 
 	LinkedList(T element);
 

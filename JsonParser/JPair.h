@@ -12,6 +12,11 @@ public:
 	char* key;
 	TypedVoidPtr value;
 
+	JPair() = default;
+
+	JPair(JPair&& other) noexcept;
+	JPair& operator=(JPair&& other) noexcept;
+
 	EndingType parse(char character, Stream& stream);
 
 	void release();

@@ -58,7 +58,7 @@ inline EndingType parseValue(Stream& stream, TypedVoidPtr& value) {
 					buffer.reset();																// Release buffer.
 					return parseEnding(stream);													// If everything works out, parse ending and return ending type.
 				}
-				buffer.add(character);
+				buffer.add(std::move(character));
 			}
 			buffer.reset();																		// Release buffer.
 			return EndingType::error;															// If stream runs out before the string could be parsed, return error.
