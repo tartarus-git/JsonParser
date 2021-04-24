@@ -1,5 +1,7 @@
 #include "JArray.h"
 
+#include <utility>
+
 #include "LinkedList.h"
 #include "TypedVoidPtr.h"
 #include "value.h"
@@ -20,9 +22,16 @@ bool JArray::parse(Stream& stream) {
 			length = buffer.length;
 			return true;																	// Return sucess.
 		}
-		buffer.add(value);																	// If everything is fine but we haven't reached the end of the array yet, just add the new value to the buffer.
+		buffer.add(std::move(value));																	// If everything is fine but we haven't reached the end of the array yet, just add the new value to the buffer.
 	}
 	// We don't need to put a return failure here because we don't actually do any parsing in this function, the values themselves take care of everything for us.
+}
+
+void JArray::release() {
+	if (length) {
+		delete[] content;
+		length = 0;
+	}
 }
 
 JArray::~JArray() {

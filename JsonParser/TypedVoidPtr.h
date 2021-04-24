@@ -13,4 +13,6 @@ enum class ValueType {
 struct TypedVoidPtr {
 	void* pointer;
 	ValueType type;
+
+	void release();
 };

@@ -14,6 +14,7 @@ public:
 
 	EndingType parse(char character, Stream& stream);
 
+	void release();
 	~JPair();
 };
 

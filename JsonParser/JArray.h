@@ -12,5 +12,6 @@ public:
 
 	bool parse(Stream& stream);
 
+	void release();
 	~JArray();
 };

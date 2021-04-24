@@ -147,6 +147,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MemoryStream.cpp" />
     <ClCompile Include="Stream.cpp" />
+    <ClCompile Include="TypedVoidPtr.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EndingType.h" />

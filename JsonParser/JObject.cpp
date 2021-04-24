@@ -1,5 +1,8 @@
 #include "JObject.h"
 
+#include <utility>
+
+
 #include "LinkedList.h"
 #include "Stream.h"
 #include "whitespace.h"
@@ -17,7 +20,7 @@ bool JObject::parse(Stream& stream) {
 
 			JPair newPair;
 			EndingType ending = newPair.parse(character, stream);												// Parse a JPair (key-value pair).
-			buffer.add(newPair);																				// Add newly parsed pair to the buffer for this object.
+			buffer.add(std::move(newPair));																				// Add newly parsed pair to the buffer for this object.
 			if (ending == EndingType::object) {																	// If the JPair ends with angel brackets, close this object.
 				content = buffer.toArray();
 				length = buffer.length;
@@ -29,3 +32,12 @@ bool JObject::parse(Stream& stream) {
 		return false;
 	}
 }
+
+void JObject::release() {
+	if (length) {
+		delete[] content;
+		length = 0;
+	}
+}
+
+JObject::~JObject() { release(); }

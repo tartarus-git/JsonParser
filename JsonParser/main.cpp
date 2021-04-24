@@ -20,4 +20,7 @@ int main(int argc, char* argv[]) {
 
 	// Wait for keyboard input so the window doesn't close automatically.
 	std::cin.get();
+
+	// Dispose JObject because the data structure could be taking up all sorts of space on the heap.
+	result.release();
 }

@@ -69,17 +69,17 @@ inline EndingType parseValue(Stream& stream, TypedVoidPtr& value) {
 			break;*/
 		case 't':
 			value.type = ValueType::boolean;
-			value.pointer = new bool(true);				// TODO: Find out which default constructor this uses and why. Should I use std::move here. Technically I should right? Defo check that out. I should use it everywhere no?
+			value.pointer = (void*)true;
 			stream.skip(3);
 			return parseEnding(stream);															// If everything works out, parse ending and return ending type.
 		case 'f':
 			value.type = ValueType::boolean;
-			value.pointer = new bool(false);
+			value.pointer = (void*)false;
 			stream.skip(4);
 			return parseEnding(stream);															// If everything works out, parse ending and return ending type.
 		case 'n':
 			value.type = ValueType::null;
-			value.pointer = nullptr;					// TODO: Should it be a pointer to a nullptr or just a nullptr? I guess you'll find out soon enough.
+			value.pointer = nullptr;
 			stream.skip(3);
 			return parseEnding(stream);															// If everything works out. parse ending and return ending type.
 		// In case of number:

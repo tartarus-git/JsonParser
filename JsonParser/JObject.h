@@ -3,11 +3,14 @@
 #include "JPair.h"
 #include "Stream.h"
 
-class JObject// : public JSubParser
+class JObject
 {
 public:
 	JPair* content;
 	int length;
 
 	bool parse(Stream& stream);
+
+	void release();
+	~JObject();
 };

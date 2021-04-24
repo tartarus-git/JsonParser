@@ -1,5 +1,7 @@
 #include "JPair.h"
 
+#include <cstdint>
+
 #include "Stream.h"
 #include "LinkedList.h"
 #include "whitespace.h"
@@ -41,7 +43,12 @@ keyEnd:																						// Finalize key and hand over control to the value 
 	return parseValue(stream, value);														// Return ending type of parsed value.
 }
 
-JPair::~JPair() {
-	//delete[] key;
-	//delete value.pointer;					// TODO: This is a major no-no and causes all sorts of memory leaks. Find a creative solution for the releasing of all this stuff.
+void JPair::release() {
+	if (key) {																					// Make sure this is the first time releasing.
+		delete[] key;																			// Delete the char array that's responsible for storing the key.
+		value.release();																		// Release the pointer, whatever type it may be.
+		key = nullptr;																			// Set the key to null so that multiple calls to release won't break anything.
+	}
 }
+
+JPair::~JPair() { release(); }
