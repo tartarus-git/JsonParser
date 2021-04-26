@@ -1,6 +1,6 @@
-#include "MemoryStream.h"
-
 #include <cstring>
+
+#include "JsonParser.h"
 
 MemoryStream::MemoryStream(const char* string) {
 	data = string;

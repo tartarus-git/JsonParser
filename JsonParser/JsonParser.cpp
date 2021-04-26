@@ -1,7 +1,5 @@
 #include "JsonParser.h"
 
-#include "JsonParser.h"
-
 JObject JsonParser::parse(Stream& stream) {
 	JObject result;
 	char character;

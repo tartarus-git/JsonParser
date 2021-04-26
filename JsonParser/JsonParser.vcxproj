@@ -150,17 +150,7 @@
     <ClCompile Include="TypedVoidPtr.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="EndingType.h" />
-    <ClInclude Include="FileStream.h" />
-    <ClInclude Include="JArray.h" />
-    <ClInclude Include="JObject.h" />
-    <ClInclude Include="JPair.h" />
     <ClInclude Include="JsonParser.h" />
-    <ClInclude Include="MemoryStream.h" />
-    <ClInclude Include="Stream.h" />
-    <ClInclude Include="TypedVoidPtr.h" />
-    <ClInclude Include="value.h" />
-    <ClInclude Include="whitespace.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

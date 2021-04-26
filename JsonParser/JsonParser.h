@@ -81,6 +81,24 @@ enum class EndingType {
 // Function for filtering out whitespace while parsing JSON content.
 inline bool filterWhitespace(char character) { return character == ' ' || character == '\t' || character == '\n' || character == '\r'; }
 
+// Representation of a key-value pair in C++ code. Parses key-value pairs.
+class JPair
+{
+public:
+	std::vector<char> key;
+	TypedVoidPtr value;
+
+	JPair() = default;
+
+	JPair(JPair&& other) noexcept;
+	JPair& operator=(JPair&& other) noexcept;
+
+	EndingType parse(char character, Stream& stream);
+
+	void release();
+	~JPair();
+};
+
 // Representation of a JSON array in C++ code. Also functions as a parser for arrays.
 class JArray
 {
@@ -204,24 +222,6 @@ inline EndingType parseValue(Stream& stream, TypedVoidPtr& value) {								// TO
 		}
 	}
 }
-
-// Representation of a key-value pair in C++ code. Parses key-value pairs.
-class JPair
-{
-public:
-	std::vector<char> key;
-	TypedVoidPtr value;
-
-	JPair() = default;
-
-	JPair(JPair&& other) noexcept;
-	JPair& operator=(JPair&& other) noexcept;
-
-	EndingType parse(char character, Stream& stream);
-
-	void release();
-	~JPair();
-};
 
 // Main parser which the user uses to get started on parsing JSON data.
 class JsonParser
