@@ -2,10 +2,7 @@
 
 #include <vector>
 
-#include "FileStream.h"
-#include "JObject.h"
 #include "JsonParser.h"
-#include "JArray.h"
 
 int main(int argc, char* argv[]) {
 	FileStream f(argv[1]);																		// Construct stream which feeds from the file input.

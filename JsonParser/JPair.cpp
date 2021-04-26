@@ -1,8 +1,6 @@
 #include "JPair.h"
 
-#include "Stream.h"
-#include "whitespace.h"
-#include "value.h"
+#include "JsonParser.h"
 
 JPair::JPair(JPair&& other) noexcept : key(std::move(other.key)), value(other.value) {
 	other.value.type = ValueType::null;

@@ -1,4 +1,5 @@
 #pragma once
+
 class Stream							// TODO: You can probably use some sort of standard thing like iostream instead of using this Stream class for this entire project. Would make more sense.
 {
 public:

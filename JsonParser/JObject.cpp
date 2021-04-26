@@ -3,9 +3,7 @@
 #include <vector>
 #include <utility>
 
-#include "Stream.h"
-#include "whitespace.h"
-#include "value.h"
+#include "JsonParser.h"
 
 bool JObject::parse(Stream& stream) {
 	char character;

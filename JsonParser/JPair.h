@@ -22,4 +22,3 @@ public:
 	void release();
 	~JPair();
 };
-

@@ -3,8 +3,7 @@
 #include <vector>
 #include <cstdint>
 
-#include "JObject.h"
-#include "JArray.h"
+#include "JsonParser.h"
 
 void TypedVoidPtr::release() {
 	switch (type) {																	// Delete the value in just the right way based on what type of value it is.
