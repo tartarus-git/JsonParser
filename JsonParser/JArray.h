@@ -1,17 +1,16 @@
 #pragma once
 
-#include "LinkedList.h"
+#include <vector>
+
 #include "Stream.h"
 #include "TypedVoidPtr.h"
 
 class JArray
 {
 public:
-	TypedVoidPtr* content;
-	int length;
+	std::vector<TypedVoidPtr> content;
 
 	bool parse(Stream& stream);
 
 	void release();
-	~JArray();
 };

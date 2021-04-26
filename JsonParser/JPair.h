@@ -1,15 +1,15 @@
 #pragma once
 
-#include "Stream.h"
-//#include "value.h"
-#include "EndingType.h"
+#include <vector>
 
 #include "TypedVoidPtr.h"
+#include "EndingType.h"
+#include "Stream.h"
 
-class JPair// : public JSubParser				// TODO: Is this thing even necessary? Where are we going to generalize and going to need this?
+class JPair
 {
 public:
-	char* key;
+	std::vector<char> key;
 	TypedVoidPtr value;
 
 	JPair() = default;

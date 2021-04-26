@@ -11,11 +11,14 @@ class FileStream : public Stream
 
 public:
 	FileStream(const char* path);
+	FileStream(FileStream&& other) noexcept;
+
+	FileStream& operator=(FileStream&& other) noexcept;										// TODO: Is it good practice to put noexcept on move assignment operators?
 
 	int read(char* buffer, int amount);
 
 	int skip(int amount);
 
+	void release();
 	~FileStream();
 };
-

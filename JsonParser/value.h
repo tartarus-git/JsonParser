@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vector>
+#include <utility>
 #include <cstdint>
 
 #include "Stream.h"
@@ -7,12 +9,11 @@
 #include "whitespace.h"
 #include "JObject.h"
 #include "JArray.h"
-#include "LinkedList.h"
 #include "TypedVoidPtr.h"
 #include "EndingType.h"
 
 #define ASCII_NUMBERS_BEGIN 0x30
-#define ASCII_NUMBERS_END ASCII_NUMBERS_BEGIN + 9
+#define ASCII_NUMBERS_END (ASCII_NUMBERS_BEGIN + 9)												// This needs to be in parenthesese because C++ just drops defines into code, which could cause errors.
 
 inline EndingType parseEnding(Stream& stream) {
 	char character;
@@ -31,12 +32,12 @@ inline EndingType parseEnding(Stream& stream) {
 	return EndingType::error;																	// Return error if stream ends before we're finished.
 }
 
-inline EndingType parseValue(Stream& stream, TypedVoidPtr& value) {
+inline EndingType parseValue(Stream& stream, TypedVoidPtr& value) {								// TODO: Make sure that inline is the best way to do this. You can't leave it out, maybe static instead?
 	char character;
 	while (stream.readChar(&character)) {														// If stream hasn't ended keep parsing.
 		if (filterWhitespace(character)) { continue; }											// Filter out whitespace.
 
-		LinkedList<char> buffer;																// You have to do this here because or else the switch statement will start complaining because of stack issues.
+		std::vector<char> buffer;																// You have to do this here because or else the switch statement will complain because stack issues.
 		bool numberIsNegative = false;															// Flag for keeping track of the sign of an ongoing number.
 		switch (character) {
 		case '{':
@@ -53,20 +54,14 @@ inline EndingType parseValue(Stream& stream, TypedVoidPtr& value) {
 			value.type = ValueType::string;
 			while (stream.readChar(&character)) {
 				if (character == '\"') {
-					buffer.add('\0');
-					value.pointer = buffer.toArray();
-					buffer.reset();																// Release buffer.
+					buffer.push_back('\0');
+					value.pointer = new std::vector<char>(std::move(buffer));					// Move the contents of the buffer into a newly created vector pointed to by the value pointer.
 					return parseEnding(stream);													// If everything works out, parse ending and return ending type.
 				}
-				buffer.add(std::move(character));
+				buffer.push_back(std::move(character));
 			}
-			buffer.reset();																		// Release buffer.
+			buffer.clear();																		// Clear buffer vector.
 			return EndingType::error;															// If stream runs out before the string could be parsed, return error.
-
-
-			/*buffer.add('\0');						// TODO: Is there any way to have this happen at array level at the end so it's more efficient without compromising the variability of the LinkedList class?
-			value.pointer = buffer.toArray();			// TODO: Handle the memory and everything.
-			break;*/
 		case 't':
 			value.type = ValueType::boolean;
 			value.pointer = (void*)true;

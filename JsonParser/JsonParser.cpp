@@ -11,12 +11,12 @@ JObject JsonParser::parse(Stream& stream) {
 			if (character == '{') { break; }
 			continue;
 		}
-		result.length = 0;																					// If file ends before the first JObject could be opened, then return an empty JObject.
-		return result;
+		return result;																						// If file ends before the first JObject could be opened, then return an empty JObject.
+																											// No need to std::move here. RVO takes care of it for use since we have move constructor.
 	}
 	if (result.parse(stream)) {																				// Tell the opened JObject to start parsing it's contents.
 		return result;																						// Return the entirety of the parsed JSON contents as long as no errors were encountered.
 	}
-	result.length = 0;																						// If errors were encountered, return an empty JObject.
-	return result;
+	return result;																							// If errors were encountered, return an empty JObject.
+																											// No need to std::move here either for same reason.
 }

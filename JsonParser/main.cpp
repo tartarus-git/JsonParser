@@ -1,5 +1,7 @@
 #include <iostream>
 
+#include <vector>
+
 #include "FileStream.h"
 #include "JObject.h"
 #include "JsonParser.h"
@@ -7,11 +9,11 @@
 
 int main(int argc, char* argv[]) {
 	FileStream f(argv[1]);																		// Construct stream which feeds from the file input.
-	JObject result = JsonParser::parse(f);														// Connect up the free end of the stream to the JSON parser.
+	JObject result = JsonParser::parse(f);														// Connect up the free end of the stream to the JSON parser and parse all the data in the stream.
 
 	// Very simple display code for debugging the parsed data.
-	for (int i = 0; i < result.length; i++) {
-		std::cout << result.content[i].key << " : " << (char*)result.content[i].value.pointer << std::endl;
+	for (int i = 0; i < result.content.size(); i++) {
+		std::cout << &result.content[i].key[0] << " : " << &(*(std::vector<char>*)result.content[i].value.pointer)[0] << std::endl;
 	}
 
 	/*for (int i = 0; i < ((JArray*)((JObject*)((JObject*)result.content[3].value.pointer)->content[0].value.pointer)->content[0].value.pointer)->length; i++) {

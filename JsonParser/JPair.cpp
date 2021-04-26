@@ -1,22 +1,17 @@
 #include "JPair.h"
 
-#include <cstdint>
-
 #include "Stream.h"
-#include "LinkedList.h"
 #include "whitespace.h"
 #include "value.h"
 
-#include <iostream>
-
-JPair::JPair(JPair&& other) noexcept : key(other.key), value(other.value) {
-	other.key = nullptr;
+JPair::JPair(JPair&& other) noexcept : key(std::move(other.key)), value(other.value) {
+	other.value.type = ValueType::null;
 }
 
 JPair& JPair::operator=(JPair&& other) noexcept {
-	key = other.key;
+	key = std::move(other.key);
 	value = other.value;
-	other.key = nullptr;
+	other.value.type = ValueType::null;
 	return *this;
 }
 
@@ -24,7 +19,7 @@ EndingType JPair::parse(char character, Stream& stream) {
 	bool quotations = character == '\"';													// Make sure to account for keys with quotations around them.
 
 	// Parse key.
-	LinkedList<char> buffer(character);
+	key.push_back(character);																// Add the first (already-known, from caller) character to the key vector.
 	while (true) {
 		if (stream.readChar(&character)) {													// If the stream has not ended, parse.
 			if (filterWhitespace(character)) { continue; }									// Filter out the whitespace.
@@ -36,32 +31,30 @@ EndingType JPair::parse(char character, Stream& stream) {
 						if (character == ':') { goto keyEnd; }								// When we hit the colon, we can hand over control to the value parser.
 						continue;
 					}
-					buffer.reset();															// If stream ends before we're ready, release buffer and return error.
-					return EndingType::error;
+					key.clear();															// If stream ends before we're ready, clear key vector and return error.
+					return EndingType::error;												// Vector will automatically destruct whatever's left so it doesn't matter what happens to JPair from here.
 				}
 			}
 			if (character == ':') { break; }												// Colon marks end of key, so break.
-			buffer.add(std::move(character));															// Read the next character and add it to the key.
+			key.push_back(character);														// Read the next character and add it to the key.
 			continue;
 		}
-		buffer.reset();																		// If the stream ends before proper closure, release buffer and return EndingType::error.
+		key.clear();																		// If the stream ends before proper closure, clear key vector and return EndingType::error.
 		return EndingType::error;
 	}
 
 keyEnd:																						// Finalize key and hand over control to the value parser.
-	buffer.add('\0');
-	key = buffer.toArray();
-	// TODO: Make sure to release the array in the finalizer of JPair and to release manually somewhere too maybe.
-
+	key.push_back('\0');
 	return parseValue(stream, value);														// Return ending type of parsed value.
 }
 
 void JPair::release() {
-	if (key) {																					// Make sure this is the first time releasing.
-		delete[] key;																			// Delete the char array that's responsible for storing the key.
-		value.release();																		// Release the pointer, whatever type it may be.
-		key = nullptr;																			// Set the key to null so that multiple calls to release won't break anything.
-	}
+	key.clear();																		// Clear the key vector.
+	value.release();																	// Release the pointer, whatever type it may be.
+	value.type = ValueType::null;														// Prevent double release by setting value type to null.
 }
 
-JPair::~JPair() { release(); }
+JPair::~JPair() {
+	value.release();																		// We're writing this again so that we can avoid an unnecessary key.clear() since vectors destruct.
+	value.type = ValueType::null;
+}

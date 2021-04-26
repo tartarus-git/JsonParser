@@ -156,8 +156,6 @@
     <ClInclude Include="JObject.h" />
     <ClInclude Include="JPair.h" />
     <ClInclude Include="JsonParser.h" />
-    <ClInclude Include="LinkedList.h" />
-    <ClInclude Include="LinkedList.hpp" />
     <ClInclude Include="MemoryStream.h" />
     <ClInclude Include="Stream.h" />
     <ClInclude Include="TypedVoidPtr.h" />
