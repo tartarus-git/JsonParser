@@ -1,8 +1,8 @@
+#include "JsonParser.h"
+
 #include <iostream>
 #include <fstream>
 #include <utility>
-
-#include "JsonParser.h"
 
 std::ifstream f;
 

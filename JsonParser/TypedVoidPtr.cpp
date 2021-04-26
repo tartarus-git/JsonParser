@@ -1,7 +1,7 @@
+#include "JsonParser.h"
+
 #include <vector>
 #include <cstdint>
-
-#include "JsonParser.h"
 
 void TypedVoidPtr::release() {
 	switch (type) {																	// Delete the value in just the right way based on what type of value it is.
@@ -14,8 +14,7 @@ void TypedVoidPtr::release() {
 	case ValueType::string:
 		delete (std::vector<char>*)pointer;
 		return;
-	case ValueType::boolean: return;
-	case ValueType::null: return;
+	case ValueType::boolean: case ValueType::null: return;
 	case ValueType::integer:
 		delete (int32_t*)pointer;
 		return;

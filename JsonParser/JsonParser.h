@@ -71,6 +71,7 @@ struct TypedVoidPtr {
 	void release();
 };
 
+// enum which is used often as a return type. This tells a parent parser if its child parser has found the end of the parent parsers object. Also used to return errors (EOF).
 enum class EndingType {
 	error = -1,
 	comma,
@@ -123,7 +124,7 @@ public:
 	void release();
 };
 
-// Function for parsing a single value in the JSON format.
+// Functions for parsing a single value in the JSON format.
 
 #define ASCII_NUMBERS_BEGIN 0x30
 #define ASCII_NUMBERS_END (ASCII_NUMBERS_BEGIN + 9)												// This needs to be in parenthesese because C++ just drops defines into code, which could cause errors.
